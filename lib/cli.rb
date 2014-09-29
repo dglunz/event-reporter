@@ -9,41 +9,69 @@ class CLI
   def start_menu
     printer.welcome_message
     until quit?
-      process_main_menu
       @command = gets.strip.downcase
+      printer.command_prompt
+      process(command)
     end
   end
 
-  def process_main_menu
-    case
-    when help?
-      print_help_menu
-      process_help_menu
+  def process(command)
+    commands = command.split(" ")
+
+    if commands.length > 1
+      method = commands[0]
+      argument = commands[1..-1].join(" ")
+    else
+      method = command
     end
+
+    case method
+    when "load"
+      load(argument)
+    when "queue"
+      queue(argument)
+    when "find"
+      find(argument)
+    when "help"
+      if commands.length > 1
+        help(argument)
+      else
+        printer.help
+      end
+    end
+
   end
 
-  def print_help_menu
-    printer.help_commands
-  end
+  def help(command)
+    commands = command.split(" ")
+    method = commands[0]
+    argument = commands[1..-1].join(" ")
 
-  def process_help_menu
-    case
-    when help_queue?
-      printer.help_queue
-    when help_queue_count?
-      printer.help_queue_count
-    when help_queue_clear?
-      printer.help_queue_clear
-    when help_queue_print?
-      printer.help_queue_print
-    when help_queue_print_by?
-      printer.help_queue_print_by
-    when help_queue_save?
-      printer.help_queue_save
-    when help_load?
+    case method
+    when "load"
       printer.help_load
-    when help_find?
+    when "queue"
+      queue_help(argument)
+    when "find"
       printer.help_find
+    end
+
+  end
+
+  def queue_help(additional)
+    case additional
+    when "count"
+      printer.help_queue_count
+    when "clear"
+      printer.help_queue_clear
+    when "print"
+      printer.help_queue_print
+    when "print by"
+      printer.help_queue_print_by
+    when "save to"
+      printer.help_queue_save_to
+    else
+      printer.help
     end
   end
 
@@ -55,35 +83,10 @@ class CLI
     command == 'h' || command == "help"
   end
 
-  def help_queue?
-    command == 'help queue'
-  end
-
-  def help_queue_count?
-    command == 'help queue count'
-  end
-
-  def help_queue_clear?
-    command == 'help queue clear'
-  end
-
-  def help_queue_print?
-    command == 'help queue print'
-  end
-
-  def help_queue_print_by?
-    command == 'help queue print by'
-  end
-
-  def help_queue_save?
-    command == 'help queue save'
-  end
-
-  def help_load?
-    command == "help load"
-  end
-
-  def help_find?
-    command == "help_find"
-  end
 end
+
+require_relative 'printer'
+
+cli = CLI.new
+# cli.process("load event_attendees.csv")
+cli.process("help queue save to")
