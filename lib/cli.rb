@@ -1,14 +1,13 @@
 class CLI
-  attr_reader :command
+  attr_reader :command, :printer
 
   def initialize
     @command = ""
+    @printer = Printer.new
   end
 
   def start_menu
-    puts "Welcome to Event Reporter"
-    puts "(q)uit to exit\n(h)elp to list available commands"
-    puts "Enter your command:"
+    printer.welcome_message
     until quit?
       process_main_menu
       @command = gets.strip.downcase
@@ -24,22 +23,28 @@ class CLI
   end
 
   def print_help_menu
-    puts "To access help instructions type Help <command name>:" 
-    puts "Available commands: \nqueue: \n\tqueue count \n\tqueue clear \n\tqueue print \n\tqueue print by\n\tqueue save"
-    puts "\nload: \nno sub-commands"
-    puts "\nfind: \nno sub-commands"
+    printer.help_commands
   end
 
   def process_help_menu
     case
     when help_queue?
+      printer.help_queue
     when help_queue_count?
+      printer.help_queue_count
     when help_queue_clear?
-    when help_queue_print
+      printer.help_queue_clear
+    when help_queue_print?
+      printer.help_queue_print
     when help_queue_print_by?
+      printer.help_queue_print_by
     when help_queue_save?
-    when help_load
-    when help_find
+      printer.help_queue_save
+    when help_load?
+      printer.help_load
+    when help_find?
+      printer.help_find
+    end
   end
 
   def quit?
@@ -74,11 +79,11 @@ class CLI
     command == 'help queue save'
   end
 
-  def help_load
+  def help_load?
     command == "help load"
   end
 
-  def help_find
-    help_find
+  def help_find?
+    command == "help_find"
   end
 end
