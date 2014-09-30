@@ -1,7 +1,7 @@
 class Printer
 
   def welcome_message
-    "Welcome to Event Reporter."
+    "Welcome to Event Reporter!"
   end
 
   def start_commands
@@ -9,20 +9,23 @@ class Printer
   end
 
   def command_prompt
-    "Enter your command:"
+    "\nEnter your command: "
+  end
+
+  def quit
+    "\nQuitting...\n"
   end
 
   def help
-    puts "\nTo access specific instructions enter: help <command name>"
-    puts "\nAvailable commands:
-    \nqueue:
-    \n\tqueue count
-    \n\tqueue clear
-    \n\tqueue print
-    \n\tqueue print by
-    \n\tqueue save to"
-    puts "\nload"
-    puts "\nfind"
+    "\nTo access specific instructions enter: 'help <command name>'
+    \nAvailable commands: \
+    \n  queue count \
+    \n  queue clear \
+    \n  queue print \
+    \n  queue print by \
+    \n  queue save to \
+    \n  load \
+    \n  find"
   end
 
   def help_load
@@ -34,11 +37,11 @@ class Printer
   end
 
   def help_queue_clear
-    "HIT"
+    "Empties the queue"
   end
 
   def help_queue_print
-    "Prints out a tab-delimited data table with a header row following this format:\n
+    "Prints out a tab-delimited data table with a header row following this format:\n \
     LAST NAME\tFIRST\tNAME\tEMAIL\tZIPCODE\tCITY\tSTATE\tADDRESS\tPHONE"
   end
 
@@ -51,15 +54,19 @@ class Printer
   end
 
   def help_find
-    "'find <attribute> <criteria>' Loads the queue with all records matching the criteria for the given attribute. Example usages:\n
-    \t'find zipcode 20011'
-    \t'find last_name Johnson'
-    \t'find state VA'\n
+    "'find <attribute> <criteria>' Loads the queue with all records matching the criteria for the given attribute. Example usages:\n \
+    \n  'find zipcode 20011' \
+    \n  'find last_name Johnson' \
+    \n  'find state VA' \
     "
   end
 
   def invalid_command(command)
     "#{command} is an invalid command. See 'help' for a list of available commands."
+  end
+
+  def clear_screen
+    "\e[2J\e[f"
   end
 
 end

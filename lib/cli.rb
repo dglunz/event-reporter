@@ -4,17 +4,15 @@ class CLI
               :out
 
   def initialize
-    @commands = ""
+    @commands = []
     @printer  = Printer.new
     @out      = $stdout
   end
 
   def start_menu
-    #will only output last evaluated string
-    out.puts printer.welcome_message
+    welcome_message
     until quit?
-      out.printf printer.command_prompt
-      @commands = gets.strip.downcase
+      get_commands
       process(commands)
     end
   end
@@ -39,7 +37,7 @@ class CLI
         out.puts printer.help
       end
     else
-      out.puts printer.invalid_command(commands.first)
+      invalid_command
     end
   end
 
@@ -75,7 +73,7 @@ class CLI
   end
 
   def quit?
-    commands == "q" || commands == "quit"
+    commands.first == "q" || commands.first == "quit"
   end
 
   def help?
@@ -84,6 +82,22 @@ class CLI
 
   def multiple_commands?
     commands.length > 1
+  end
+
+  def get_commands
+    out.printf printer.command_prompt
+    @commands = gets.strip.downcase
+  end
+
+  def welcome_message
+    out.print printer.clear_screen
+    out.puts printer.welcome_message
+    out.puts printer.start_commands
+  end
+
+  def invalid_command
+    invalid = commands.join(" ")
+    quit? ? (out.puts printer.quit) : (out.puts printer.invalid_command(invalid))
   end
 
 end
