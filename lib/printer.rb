@@ -33,7 +33,7 @@ class Printer
   end
 
   def help_queue_count
-    "Outputs how many records are in the current queue."
+    "Counts the number of records in the current queue."
   end
 
   def help_queue_clear
