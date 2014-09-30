@@ -1,6 +1,6 @@
 require_relative 'test_helper'
 
-class RepositoryTest < MiniTest::Test
+class RepositoryTest < MiniTest::Test 
 
 	def test_find_by_first_name
 		csv = Loader.new("../data/test.csv")
@@ -11,21 +11,8 @@ class RepositoryTest < MiniTest::Test
 		assert_equal "Allison", queue[0].first_name
 		assert_equal "Nguyen", queue[0].last_name
 		assert_equal "6154385000", queue[0].homephone
-		# assert_equal "11/12/08 10:47", queue[0].regdate
 		assert_equal 1, queue.count
 	end
-
-	# def test_find_by_registration_date
-	# 	csv = Loader.new("../data/test.csv")
-	#
-	# 	repository = Repository.new(csv.attendees)
-	# 	queue = repository.find_by_registration_date("11/12/08 10:47")
-	#
-	# 	assert_equal "Allison", queue[0].first_name
-	# 	assert_equal "Nguyen", queue[0].last_name
-	# 	assert_equal "6154385000", queue[0].homephone
-	# 	assert_equal 1, queue.count
-	# end
 
 	def test_find_by_last_name
 		csv = Loader.new("../data/test.csv")
@@ -108,6 +95,46 @@ class RepositoryTest < MiniTest::Test
 		assert_equal "Sarah", queue[0].first_name
 		assert_equal "Xx", queue[0].last_name
 		assert_equal "33703", queue[0].zipcode
+		assert_equal 1, queue.count
+	end
+
+	def test_find_by_case_insensitive_first_name
+		csv = Loader.new("../data/test.csv")
+
+		repository = Repository.new(csv.attendees)
+		queue = repository.find_by_first_name("sarah")
+
+		assert_equal "SArah", queue[0].first_name
+		assert_equal 2, queue.count
+	end
+
+	def test_find_by_case_insensitive_last_name
+		csv = Loader.new("../data/test.csv")
+
+		repository = Repository.new(csv.attendees)
+		queue = repository.find_by_last_name("hankins")
+
+		assert_equal "Hankins", queue[0].last_name
+		assert_equal 1, queue.count
+	end
+
+		def test_find_by_case_insensitive_city
+		csv = Loader.new("../data/test.csv")
+
+		repository = Repository.new(csv.attendees)
+		queue = repository.find_by_city("SAint petersburg")
+
+		assert_equal "Saint Petersburg", queue[0].city
+		assert_equal 1, queue.count
+	end
+
+	def test_find_by_case_insensitive_state
+		csv = Loader.new("../data/test.csv")
+
+		repository = Repository.new(csv.attendees)
+		queue = repository.find_by_state("fl")
+
+		assert_equal "FL", queue[0].state
 		assert_equal 1, queue.count
 	end
 end
