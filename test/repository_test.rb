@@ -1,6 +1,6 @@
 require_relative 'test_helper'
 
-class Repository < MiniTest::Test 
+class RepositoryTest < MiniTest::Test 
 
 	def test_find_by_first_name
 		csv = Loader.new("../data/test.csv")
