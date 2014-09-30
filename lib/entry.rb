@@ -7,7 +7,8 @@ class Entry
 							:street,
 							:city,
 							:state,
-							:zipcode
+							:zipcode,
+							:cleaner
 
 	def initialize(data)
 		@cleaner       = Cleaner.new
