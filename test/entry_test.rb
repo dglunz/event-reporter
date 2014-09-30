@@ -1,6 +1,6 @@
 require_relative 'test_helper'
 
-class RepositoryTest < MiniTest::Test 
+class EntryTest < MiniTest::Test 
 
 	def test_entry_attributes
 
