@@ -6,16 +6,16 @@ class Repository
 		@attendees = attendees
 	end
 
-	# def find_by_registration_date(regdate)
-	# 	@queue = attendees.find_all { |entry| entry.regdate == regdate }
-	# end
-
 	def find_by_first_name(first_name)
-		@queue = attendees.find_all { |entry| entry.first_name == first_name }
+		@queue = attendees.find_all { |entry| entry.first_name.downcase == first_name.downcase }
+	end
+
+	def find_by_regdate(regdate)
+		@queue = attendees.find_all { |entry| entry.regdate == redate }
 	end
 
 	def find_by_last_name(last_name)
-		@queue = attendees.find_all { |entry| entry.last_name == last_name }
+		@queue = attendees.find_all { |entry| entry.last_name.downcase == last_name.downcase }
 	end
 
 	def find_by_email_address(email_address)
@@ -31,11 +31,11 @@ class Repository
 	end
 
 	def find_by_city(city)
-		@queue = attendees.find_all { |entry| entry.city == city }
+		@queue = attendees.find_all { |entry| entry.city.downcase == city.downcase }
 	end
 
 	def find_by_state(state)
-		@queue = attendees.find_all { |entry| entry.state == state }
+		@queue = attendees.find_all { |entry| entry.state.downcase == state.downcase }
 	end
 
 	def find_by_zipcode(zipcode)
