@@ -1,7 +1,8 @@
 class CLI
   attr_reader :commands,
               :printer,
-              :out
+              :out,
+              :repository
 
   def initialize(out=$stdout)
     @commands = []
@@ -25,7 +26,7 @@ class CLI
 
     case commands.first
     when "load"
-      load(argument)
+      load
     when "queue"
       queue(argument)
     when "find"
@@ -37,15 +38,31 @@ class CLI
     end
   end
 
+  def load
+    csv = Loader.new
+    @repository = Repository.new(csv.attendees)
+  end
+
+  def find(argument)
+    attribute = argument.first
+    criteria = argument[1..-1].join(" ")
+    repository.find_by(attribute, criteria)
+  end
+
   def queue(argument)
     case argument.first
     when "print"
-      load_test = Loader.new("./data/event_attendees.csv")
-      repo = Repository.new(load_test.attendees)
-      repo.find_by("first_name", "john")
-      repo.queue_print
+      repository.queue_print
+    when "count"
+      repository.queue_count
+      out.puts repository.queue_count
+    when "clear"
+      repository.queue_clear
+      out.puts repository.queue_count
+    when "save"
+      file_name = argument.last
+      Saver.new.save_file(repository.queue, file_name)
     end
-
   end
 
   def help(commands)
