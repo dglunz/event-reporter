@@ -20,12 +20,13 @@ class Repository < MiniTest::Test
 
 		assert_equal "1", entry.id
 		assert_equal "11/12/08 10:47", entry.reg_date
-		assert_equal "Allison", entry.reg_date
-		assert_equal "Nguyen", entry.email_address
+		assert_equal "Allison", entry.first_name
+		assert_equal "Nguyen", entry.last_name
+		assert_equal "arannon@jumpstartlab.com", entry.email_address
 		assert_equal "6154385000", entry.homephone
 		assert_equal "3155 19th St NW", entry.street
 		assert_equal "Washington", entry.city
-		assert_equal "DC", entry.city
+		assert_equal "DC", entry.state
 		assert_equal "20010", entry.zipcode
 	end
 end

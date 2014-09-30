@@ -3,12 +3,9 @@ require_relative 'test_helper'
 class Repository < MiniTest::Test 
 
 	def test_find_by_first_name
-		attendees = { id: "1", reg_date: "11/12/08 10:47", first_name: "Allison", last_name: "Nguyen", email_address: "arannon@jumpstartlab.com", homephone: "6154385000", street: "3155 19th St NW", city: "Washington", state: "DC", zipcode: "20010",
-								 id: "2", reg_date: "11/12/08 13:23", first_name: "SArah", last_name: "Hankins", email_address: "pinalevitsky@jumpstartlab.com", homephone: "414-520-5000", street: "2022 15th Street NW", city: "Washington", state: "DC", zipcode: "20009", 
-								 id: "3", reg_date: "11/12/08 13:30,", first_name: "Sarah", last_name: "Xx", email_address: "lqrm4462@jumpstartlab.com", homephone: "(941)979-2000", street: "4175 3rd Street North", city: "Saint Petersburg", state: "FL", zipcode: "33703"
-			].map { |row| Entry.new(row) }
+		csv = Loader.new("../data/test.csv")
 
-		repository = Repository.new(attendees)
+		repository = Repository.new(csv.attendees)
 		queue = repository.find_by_first_name("Allison")
 
 		assert_equal "Allison", queue[0].first_name
