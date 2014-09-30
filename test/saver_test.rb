@@ -14,5 +14,7 @@ class SaverTest < MiniTest::Test
 		saver.save_file(queue, file_name)
 
 		assert File.exist?('./data/test_output_file.csv')
+
+		File.delete('./data/test_output_file.csv')
 	end
 end
