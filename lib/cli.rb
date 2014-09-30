@@ -37,6 +37,17 @@ class CLI
     end
   end
 
+  def queue(argument)
+    case argument.first
+    when "print"
+      load_test = Loader.new("./data/event_attendees.csv")
+      repo = Repository.new(load_test.attendees)
+      repo.find_by("first_name", "john")
+      repo.queue_print
+    end
+
+  end
+
   def help(commands)
     argument = commands[1..-1].join(" ")
 
