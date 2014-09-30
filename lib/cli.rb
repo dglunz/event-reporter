@@ -68,7 +68,7 @@ class CLI
     when "save to"
       out.puts printer.help_queue_save_to
     else
-      out.puts printer.invalid_command(commands)
+      invalid_command
     end
   end
 
