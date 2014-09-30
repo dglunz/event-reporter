@@ -18,13 +18,13 @@ class RepositoryTest < MiniTest::Test
 		entry = Entry.new(data)
 
 		assert_equal "11/12/08 10:47", entry.regdate
-		assert_equal "Allison", entry.first_name
-		assert_equal "Nguyen", entry.last_name
+		assert_equal "allison", entry.first_name
+		assert_equal "nguyen", entry.last_name
 		assert_equal "arannon@jumpstartlab.com", entry.email_address
 		assert_equal "6154385000", entry.homephone
-		assert_equal "3155 19th St NW", entry.street
-		assert_equal "Washington", entry.city
-		assert_equal "DC", entry.state
+		assert_equal "3155 19th st nw", entry.street
+		assert_equal "washington", entry.city
+		assert_equal "dc", entry.state
 		assert_equal "20010", entry.zipcode
 	end
 end
