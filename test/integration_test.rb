@@ -1,8 +1,16 @@
 require_relative 'test_helper'
 
 class IntegrationTest < Minitest::Test
+  def output
+    @output ||= StringIO.new
+  end
+
   def cli
-    @cli ||= EventReporter::CLI.new
+    @cli ||= EventReporter::CLI.new(output)
+  end
+
+  def clear_output
+    @output.string = ''
   end
 
   def test_happy_path
@@ -15,13 +23,20 @@ class IntegrationTest < Minitest::Test
     cli.process("queue clear")
     assert_equal 0, cli.process("queue count")
 
+    cli.process("help")
     %w[load find queue help].each do |command_name|
-    assert_includes cli.process("help"), command_name
+    assert_includes output.string, command_name
     end
 
-    assert_includes cli.process("help queue count"), "Counts the number of items in the queue"
-    assert_includes cli.process("help queue print"), "Prints each item in the queue"
-    refute_includes cli.process("help queue count"), "Prints each item in the queue"
+    cli.process("help queue count")
+    assert_includes output.string, "Counts the number of records in the current queue."
+
+    cli.process("help queue print")
+    assert_includes output.string, "Prints out a tab-delimited data table"
+
+    clear_output
+    cli.process("help queue count")
+    refute_includes output.string, "Prints out a tab-delimited data table"
   end
 
   def test_output
