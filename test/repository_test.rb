@@ -169,7 +169,6 @@ class RepositoryTest < MiniTest::Test
 	# 	assert_equal "washington", queue[1].city
 	# end
 
-
 	# def test_sort_by_homephone
 	# 	csv 			 = Loader.new("../data/test.csv")
 	# 	repository = Repository.new(csv.attendees)
