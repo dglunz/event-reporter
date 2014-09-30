@@ -18,7 +18,7 @@ class CLI
   end
 
   def process(input)
-    @commands = input
+    @commands = input #.split(" ")
     @commands = commands.split(" ")
 
     argument = commands[1..-1]
