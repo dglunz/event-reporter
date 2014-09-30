@@ -1,31 +1,31 @@
 class CLI
-  attr_reader :command, :printer
+  attr_reader :commands,
+              :printer,
+              :out
 
   def initialize
-    @command = ""
-    @printer = Printer.new
+    @commands = ""
+    @printer  = Printer.new
+    @out      = $stdout
   end
 
   def start_menu
-    printer.welcome_message
+    #will only output last evaluated string
+    out.puts printer.welcome_message
     until quit?
-      @command = gets.strip.downcase
-      printer.command_prompt
-      process(command)
+      out.printf printer.command_prompt
+      @commands = gets.strip.downcase
+      process(commands)
     end
   end
 
-  def process(command)
-    commands = command.split(" ")
+  def process(input)
+    @commands = input
+    @commands = commands.split(" ")
 
-    if commands.length > 1
-      method = commands[0]
-      argument = commands[1..-1].join(" ")
-    else
-      method = command
-    end
+    argument = commands[1..-1]
 
-    case method
+    case commands.first
     when "load"
       load(argument)
     when "queue"
@@ -33,27 +33,26 @@ class CLI
     when "find"
       find(argument)
     when "help"
-      if commands.length > 1
+      if multiple_commands?
         help(argument)
       else
-        printer.help
+        out.puts printer.help
       end
+    else
+      out.puts printer.invalid_command(commands.first)
     end
-
   end
 
-  def help(command)
-    commands = command.split(" ")
-    method = commands[0]
+  def help(commands)
     argument = commands[1..-1].join(" ")
 
-    case method
+    case commands.first
     when "load"
-      printer.help_load
+      out.puts printer.help_load
     when "queue"
       queue_help(argument)
     when "find"
-      printer.help_find
+      out.puts printer.help_find
     end
 
   end
@@ -61,32 +60,36 @@ class CLI
   def queue_help(additional)
     case additional
     when "count"
-      printer.help_queue_count
+      out.puts printer.help_queue_count
     when "clear"
-      printer.help_queue_clear
+      out.puts printer.help_queue_clear
     when "print"
-      printer.help_queue_print
+      out.puts printer.help_queue_print
     when "print by"
-      printer.help_queue_print_by
+      out.puts printer.help_queue_print_by
     when "save to"
-      printer.help_queue_save_to
+      out.puts printer.help_queue_save_to
     else
-      printer.help
+      out.puts printer.invalid_command(commands)
     end
   end
 
   def quit?
-    command == "q" || command == "quit"
+    commands == "q" || commands == "quit"
   end
 
   def help?
-    command == 'h' || command == "help"
+    commands == 'h' || commands == "help"
+  end
+
+  def multiple_commands?
+    commands.length > 1
   end
 
 end
 
-require_relative 'printer'
-
-cli = CLI.new
-# cli.process("load event_attendees.csv")
-cli.process("help queue save to")
+# require_relative 'printer'
+#
+# cli = CLI.new
+# # cli.process("load event_attendees.csv")
+# cli.process("help queue save to")
