@@ -1,5 +1,6 @@
 class Repository
-	attr_reader :attendees
+	attr_reader :attendees,
+							:queue
 
 	def initialize(attendees)
 		@queue = []
@@ -16,5 +17,10 @@ class Repository
 
 	def queue_count
 		@queue.count
+	end
+
+	def queue_print
+		table = Table.new(queue)
+		table.create_table
 	end
 end
