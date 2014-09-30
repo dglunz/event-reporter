@@ -14,6 +14,19 @@ class RepositoryTest < MiniTest::Test
 		assert_equal 1, queue.count
 	end
 
+	def test_find_by_registration_date
+		csv = Loader.new("../data/test.csv")
+
+		repository = Repository.new(csv.attendees)
+		queue = repository.find_by_regdate("11/12/08 13:23")
+
+		assert_equal "SArah", queue[0].first_name
+		assert_equal "11/12/08 13:23", queue[0].regdate
+		assert_equal "pinalevitsky@jumpstartlab.com", queue[0].email_address
+		assert_equal "Washington", queue[0].city
+		assert_equal 1, queue.count
+	end
+
 	def test_find_by_last_name
 		csv = Loader.new("../data/test.csv")
 

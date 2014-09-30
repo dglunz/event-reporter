@@ -1,11 +1,10 @@
 require_relative 'test_helper'
 
-class Repository < MiniTest::Test 
+class RepositoryTest < MiniTest::Test 
 
 	def test_entry_attributes
 
-		data = { id: "1", 
-						 reg_date: "11/12/08 10:47", 
+		data = { regdate: "11/12/08 10:47", 
 						 first_name: "Allison", 
 						 last_name: "Nguyen", 
 						 email_address: "arannon@jumpstartlab.com", 
@@ -18,8 +17,7 @@ class Repository < MiniTest::Test
 
 		entry = Entry.new(data)
 
-		assert_equal "1", entry.id
-		assert_equal "11/12/08 10:47", entry.reg_date
+		assert_equal "11/12/08 10:47", entry.regdate
 		assert_equal "Allison", entry.first_name
 		assert_equal "Nguyen", entry.last_name
 		assert_equal "arannon@jumpstartlab.com", entry.email_address
