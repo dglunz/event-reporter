@@ -10,7 +10,7 @@ class Entry
 							:zipcode
 
 	def initialize(data)
-		@id 					 = data[:_]
+		@id						 = data[:_]
 		@regdate			 = data[:regdate]
 		@first_name		 = data[:first_name]
 		@last_name 		 = data[:last_name]
