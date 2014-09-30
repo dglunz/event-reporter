@@ -11,7 +11,7 @@ class Repository
 	end
 
 	def find_by_regdate(regdate)
-		@queue = attendees.find_all { |entry| entry.regdate == redate }
+		@queue = attendees.find_all { |entry| entry.regdate == regdate }
 	end
 
 	def find_by_last_name(last_name)
@@ -40,5 +40,13 @@ class Repository
 
 	def find_by_zipcode(zipcode)
 		@queue = attendees.find_all { |entry| entry.zipcode == zipcode }
+	end
+
+	def queue_clear
+		@queue.clear
+	end
+
+	def queue_count
+		@queue.count
 	end
 end

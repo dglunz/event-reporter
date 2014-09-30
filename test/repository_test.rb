@@ -150,4 +150,27 @@ class RepositoryTest < MiniTest::Test
 		assert_equal "FL", queue[0].state
 		assert_equal 1, queue.count
 	end
+
+	def test_queue_count
+		csv = Loader.new("../data/test.csv")
+
+		repository = Repository.new(csv.attendees)
+		queue = repository.find_by_first_name("sarah")
+
+		assert_equal 2, repository.queue_count
+	end
+
+	def test_queue_clear
+		csv = Loader.new("../data/test.csv")
+
+		repository = Repository.new(csv.attendees)
+		queue = repository.find_by_first_name("sarah")
+
+		assert_equal 2, repository.queue_count
+
+		repository.queue_clear 
+
+		assert_equal [], repository.queue_clear
+		assert_equal 0, repository.queue_count
+	end
 end
