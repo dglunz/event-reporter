@@ -10,6 +10,7 @@ class CLI
     @printer  = Printer.new
     @out      = out
     @input    = input
+    @repository = Repository.new
   end
 
   def start_menu
@@ -67,7 +68,7 @@ class CLI
   def print_by(argument)
     attribute = argument.last
     repository.sort_by(attribute)
-    repository.queue_print
+    out.puts repository.queue_print
   end
 
   def help(commands)

@@ -2,7 +2,7 @@ class Repository
 	attr_reader :attendees,
 							:queue
 
-	def initialize(attendees)
+	def initialize(attendees=[])
 		@queue = []
 		@attendees = attendees
 	end
