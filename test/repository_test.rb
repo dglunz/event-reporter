@@ -2,7 +2,7 @@ require_relative 'test_helper'
 
 class RepositoryTest < MiniTest::Test
 	def csv
-		@csv = Loader.new("./data/test.csv")
+		@csv = Loader.new("test.csv")
 	end
 
 	def repository
@@ -132,40 +132,41 @@ class RepositoryTest < MiniTest::Test
 		assert_equal 0, repository.queue_count
 	end
 
-	# def test_sort_by_last_name
-	# 	csv 			 = Loader.new("../data/test.csv")
-	# 	repository = Repository.new(csv.attendees)
-	# 	attribute  = "last_name"
-	# 	queue      = repository.find_by_first_name("sarah")
+	def test_sort_by_last_name
+		repository = Repository.new(csv.attendees)
 
-	# 	queue.sort_by(attribute)
+		repository.find_by("first_name", "sarah")
 
-	# 	assert_equal "hankins", queue[0].last_name
-	# 	assert_equal "saint petersburg", queue[1].city
-	# end
+		assert_equal 2, repository.queue_count
 
-	# def test_sort_by_city
-	# 	csv 			 = Loader.new("../data/test.csv")
-	# 	repository = Repository.new(csv.attendees)
-	# 	attribute  = "last_name"
-	# 	queue      = repository.find_by_first_name("sarah")
+		repository.sort_by("last_name")
 
-	# 	queue.sort_by(attribute)
+		assert_equal "hankins", repository.queue[0].last_name
+		assert_equal "saint petersburg", repository.queue[1].city
+	end
 
-	# 	assert_equal "xx", queue[0].last_name
-	# 	assert_equal "washington", queue[1].city
-	# end
+	def test_sort_by_city
+		repository = Repository.new(csv.attendees)
+		attribute  = "city"
 
-	# def test_sort_by_homephone
-	# 	csv 			 = Loader.new("../data/test.csv")
-	# 	repository = Repository.new(csv.attendees)
-	# 	attribute  = "last_name"
-	# 	queue      = repository.find_by_first_name("sarah")
+		repository.find_by("first_name", "sarah")
 
-	# 	queue.sort_by(attribute)
+		repository.sort_by(attribute)
 
-	# 	assert_equal "hankins", queue[0].last_name
-	# 	assert_equal "saint petersburg", queue[1].city
-	# end
+		assert_equal "xx", repository.queue[0].last_name
+		assert_equal "washington", repository.queue[1].city
+	end
+
+	def test_sort_by_homephone
+		repository = Repository.new(csv.attendees)
+		attribute  = "homephone"
+
+		repository.find_by("first_name", "sarah")
+
+		repository.sort_by(attribute)
+
+		assert_equal "hankins", repository.queue[0].last_name
+		assert_equal "saint petersburg", repository.queue[1].city
+	end
 
 end

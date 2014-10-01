@@ -23,4 +23,8 @@ class Repository
 		table = Table.new(queue)
 		table.create_table
 	end
+
+	def sort_by(attribute)
+		@queue.sort! {|entry1, entry2| entry1.send(attribute.to_sym) <=> entry2.send(attribute.to_sym) }
+	end
 end

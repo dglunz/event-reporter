@@ -26,7 +26,7 @@ class CLI
 
     case commands.first
     when "load"
-      load
+      load(argument.last)
     when "queue"
       queue(argument)
     when "find"
@@ -38,8 +38,8 @@ class CLI
     end
   end
 
-  def load
-    csv = Loader.new
+  def load(path="event_attendees.csv")
+    csv = Loader.new(path)
     @repository = Repository.new(csv.attendees)
   end
 
@@ -52,17 +52,21 @@ class CLI
   def queue(argument)
     case argument.first
     when "print"
-      repository.queue_print
+      multiple_commands? ? print_by(argument) : repository.queue_print
     when "count"
-      repository.queue_count
       out.puts repository.queue_count
     when "clear"
       repository.queue_clear
-      out.puts repository.queue_count
     when "save"
       file_name = argument.last
       Saver.new.save_file(repository.queue, file_name)
     end
+  end
+
+  def print_by(argument)
+    attribute = argument.last
+    repository.sort_by(attribute)
+    repository.queue_print
   end
 
   def help(commands)
