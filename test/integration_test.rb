@@ -142,4 +142,28 @@ class IntegrationTest < Minitest::Test
     assert_equal "0\n", output.string
     File.delete('./data/empty.csv')
   end
+
+  def test_queue_math
+    #load
+    cli.process("load")
+    #find zipcode 20011
+    cli.process("find zipcode 20011")
+    #subtract first_name william
+    cli.process("subtract first_name william")
+    #add zipcode 20010
+    cli.process("add zipcode 20010")
+    #Observe that there are 8 records in the queue.
+    cli.process("queue count")
+    assert_equal "8\n", output.string
+  end
+
+  def test_improve_find
+    # load
+    cli.process("load")
+    #find first_name sarah and state CA
+    cli.process("find first_name sarah and state ca")
+    #Observe that there should only be four records in the queue
+    cli.process("queue count")
+    assert_equal "4\n", output.string
+    end
 end
