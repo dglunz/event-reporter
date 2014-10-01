@@ -1,156 +1,40 @@
 class CLI
-  attr_reader :commands,
-              :printer,
+  attr_reader :printer,
               :out,
               :input,
-              :repository
+              :repository,
+              :commands,
+              :argument,
+              :processor
 
   def initialize(out=$stdout, input=$stdin)
-    @commands = []
-    @printer  = Printer.new
-    @out      = out
-    @input    = input
-    @repository = Repository.new
+    @out        = out
+    @input      = input
+    @printer    = Printer.new
+    @commands   = ''
+    @processor  = Processor.new(printer, out)
   end
 
   def start_menu
     welcome_message
-    until quit?
+    until processor.quit?
       get_commands
       process(commands)
     end
   end
 
   def process(input)
-    @commands = input.split(" ")
-
-    argument = commands[1..-1] if multiple_commands?
-
-    case commands.first
-    when "load"
-      multiple_commands? ? load_file(argument.last) : load_file
-    when "queue"
-      queue(argument)
-    when "find"
-      find(argument)
-    when "help"
-      multiple_commands? ? help(argument) : (out.puts printer.help)
-    when "subtract"
-      subtract(argument)
-    when "add"
-      add(argument)
-    else
-      invalid_command
-    end
-  end
-
-  def load_file(path="event_attendees.csv")
-    csv = Loader.new(path)
-    @repository = Repository.new(csv.attendees)
-  end
-
-  def find(argument)
-    case 
-    when argument.none? { |word| word == "and" }
-      attribute = argument.first
-      criteria = argument[1..-1].join(" ")
-      repository.find_by(attribute, criteria)
-    else
-      attribute = argument[0]
-      criteria = argument[1]
-      second_attribute = argument[3]
-      second_criteria = argument[4]
-      repository.find_by(attribute, criteria)
-      repository.narrow_results_by(second_attribute, second_criteria)
-    end
-  end
-
-  def subtract(argument)
-    second_attribute = argument.first
-    second_criteria = argument[1..-1].join(" ")
-    repository.subtract_results_by(second_attribute, second_criteria)
-  end
-
-  def add(argument)
-    second_attribute = argument.first
-    second_criteria  = argument[1..-1].join(" ")
-    repository.add_results_by(second_attribute, second_criteria)
-  end
-
-  def queue(argument)
-    case argument.first
-    when "print"
-      multiple_commands? ? print_by(argument) : repository.queue_print
-    when "count"
-      out.puts repository.queue_count
-    when "clear"
-      repository.queue_clear
-    when "save"
-      file_name = argument.last
-      Saver.new.save_file(repository.queue, file_name)
-    end
-  end
-
-  def print_by(argument)
-    attribute = argument.last
-    repository.sort_by(attribute)
-    out.puts repository.queue_print
-  end
-
-  def help(commands)
-    argument = commands[1..-1].join(" ")
-
-    case commands.first
-    when "load"
-      out.puts printer.help_load
-    when "queue"
-      queue_help(argument)
-    when "find"
-      out.puts printer.help_find
-    else
-      invalid_command
-    end
-
-  end
-
-  def queue_help(additional)
-    case additional
-    when "count"
-      out.puts printer.help_queue_count
-    when "clear"
-      out.puts printer.help_queue_clear
-    when "print"
-      out.puts printer.help_queue_print
-    when "print by"
-      out.puts printer.help_queue_print_by
-    when "save to"
-      out.puts printer.help_queue_save_to
-    else
-      multiple_commands? ? invalid_command : (out.puts printer.help)
-    end
-  end
-
-  def quit?
-    commands.first == "q" || commands.first == "quit"
-  end
-
-  def multiple_commands?
-    commands.length > 1
+    processor.process(input)
   end
 
   def get_commands
     out.printf printer.command_prompt
-    @commands = input.gets.strip.downcase
+    @commands = input.gets
   end
 
   def welcome_message
     out.print printer.clear_screen
     out.puts printer.welcome_message
-  end
-
-  def invalid_command
-    invalid = commands.join(" ")
-    quit? ? (out.puts printer.quit) : (out.puts printer.invalid_command(invalid))
   end
 
 end
