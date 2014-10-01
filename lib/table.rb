@@ -10,7 +10,7 @@ class Table
                "First Name",
                "Last Name",
                "Email Address",
-               "HomePhone", 
+               "HomePhone",
                "Street",
                "City",
                "State",
@@ -24,11 +24,9 @@ class Table
     table = Terminal::Table.new :title => @title,
                                 :headings => @header,
                                 :rows => @rows
-    puts table
   end
 
   def queue_to_row
-
     queue.each do |entry|
       @rows << [entry.id,
                 entry.regdate,
