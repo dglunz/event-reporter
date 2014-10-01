@@ -6,23 +6,30 @@ class IntegrationTest < Minitest::Test
   end
 
   def cli
-    @cli ||= EventReporter::CLI.new(output)
+    @cli ||= CLI.new(output)
   end
 
   def clear_output
     @output.string = ''
   end
-  
-  def test_happy_path
-    skip
-    cli.process "load event_attendees.csv"
-    assert_equal 0, cli.process("queue count")
 
-    cli.process("find first_name John")
-    assert_equal 63, cli.process("queue count") # 62 match exactly, one matches case insensitive
+  def test_happy_path
+    cli.process "load event_attendees.csv"
+    cli.process "queue count"
+
+    assert_equal "0\n", output.string
+
+    clear_output
+
+    cli.process("find first_name john")
+    cli.process("queue count")
+    assert_equal "63\n", output.string
+
+    clear_output
 
     cli.process("queue clear")
-    assert_equal 0, cli.process("queue count")
+    cli.process("queue count")
+    assert_equal "0\n", output.string
 
     cli.process("help")
     %w[load find queue help].each do |command_name|
