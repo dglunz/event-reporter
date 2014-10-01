@@ -35,6 +35,10 @@ class CLI
       find(argument)
     when "help"
       multiple_commands? ? help(argument) : (out.puts printer.help)
+    when "subtract"
+      subtract(argument)
+    when "add"
+      add(argument)
     else
       invalid_command
     end
@@ -46,9 +50,31 @@ class CLI
   end
 
   def find(argument)
-    attribute = argument.first
-    criteria = argument[1..-1].join(" ")
-    repository.find_by(attribute, criteria)
+    case 
+    when argument.none? { |word| word == "and" }
+      attribute = argument.first
+      criteria = argument[1..-1].join(" ")
+      repository.find_by(attribute, criteria)
+    else
+      attribute = argument[0]
+      criteria = argument[1]
+      second_attribute = argument[3]
+      second_criteria = argument[4]
+      repository.find_by(attribute, criteria)
+      repository.narrow_results_by(second_attribute, second_criteria)
+    end
+  end
+
+  def subtract(argument)
+    second_attribute = argument.first
+    second_criteria = argument[1..-1].join(" ")
+    repository.subtract_results_by(second_attribute, second_criteria)
+  end
+
+  def add(argument)
+    second_attribute = argument.first
+    second_criteria  = argument[1..-1].join(" ")
+    repository.add_results_by(second_attribute, second_criteria)
   end
 
   def queue(argument)

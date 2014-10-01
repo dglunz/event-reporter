@@ -11,6 +11,18 @@ class Repository
 		@queue = attendees.find_all { |entry| entry.send(attribute.to_sym) == criteria }
 	end
 
+	def narrow_results_by(second_attribute, second_criteria)
+		@queue = queue.find_all { |entry| entry.send(second_attribute.to_sym) == second_criteria }
+	end
+
+	def add_results_by(second_attribute, second_criteria)
+		(@queue << attendees.find_all { |entry| entry.send(second_attribute.to_sym) == second_criteria }).flatten!
+	end
+
+	def subtract_results_by(second_attribute, second_criteria)
+		@queue = queue.reject { |entry| entry.send(second_attribute.to_sym) == second_criteria }
+	end
+
 	def queue_clear
 		@queue.clear
 	end

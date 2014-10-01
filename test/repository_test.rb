@@ -169,4 +169,50 @@ class RepositoryTest < MiniTest::Test
 		assert_equal "saint petersburg", repository.queue[1].city
 	end
 
+	def test_find_with_two_search_criteria
+		repository        = Repository.new(csv.attendees)
+		attribute         = "first_name"
+		criteria          = "sarah"
+		second_attribute  = "state"
+		second_criteria   = "dc"
+		repository.find_by(attribute, criteria)
+
+		repository.narrow_results_by(second_attribute, second_criteria)
+
+		assert_equal "sarah", repository.queue[0].first_name
+		assert_equal "washington", repository.queue[0].city
+		assert_equal 1, repository.queue.count
+	end
+
+	def test_subtracts_search_criteria
+		repository        = Repository.new(csv.attendees)
+		attribute         = "first_name"
+		criteria          = "sarah"
+		second_attribute  = "city"
+		second_criteria   = "saint petersburg"
+		repository.find_by(attribute, criteria)
+		assert_equal 2, repository.queue.count
+
+		repository.subtract_results_by(second_attribute, second_criteria)
+
+		assert_equal "sarah", repository.queue[0].first_name
+		assert_equal "dc", repository.queue[0].state
+		assert_equal 1, repository.queue.count
+	end
+
+	def test_add_search_criteria
+		repository        = Repository.new(csv.attendees)
+		attribute         = "first_name"
+		criteria          = "sarah"
+		second_attribute  = "last_name"
+		second_criteria   = "nguyen"
+		repository.find_by(attribute, criteria)
+
+		repository.add_results_by(second_attribute, second_criteria)
+
+		assert_equal "allison", repository.queue[2].first_name
+		assert_equal "xx", repository.queue[1].last_name
+		assert_equal 3, repository.queue.count
+	end
+
 end
