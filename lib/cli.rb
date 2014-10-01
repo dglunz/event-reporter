@@ -40,8 +40,6 @@ class CLI
   end
 
   def load_file(path="event_attendees.csv")
-    require 'pry'
-    binding.pry
     csv = Loader.new(path)
     @repository = Repository.new(csv.attendees)
   end
