@@ -2,12 +2,14 @@ class CLI
   attr_reader :commands,
               :printer,
               :out,
+              :input,
               :repository
 
-  def initialize(out=$stdout)
+  def initialize(out=$stdout, input=$stdin)
     @commands = []
     @printer  = Printer.new
     @out      = out
+    @input    = input
   end
 
   def start_menu
@@ -19,14 +21,13 @@ class CLI
   end
 
   def process(input)
-    @commands = input #.split(" ")
-    @commands = commands.split(" ")
+    @commands = input.split(" ")
 
-    argument = commands[1..-1]
+    argument = commands[1..-1] if multiple_commands?
 
     case commands.first
     when "load"
-      load(argument.last)
+      multiple_commands? ? load_file(argument.last) : load_file
     when "queue"
       queue(argument)
     when "find"
@@ -38,7 +39,7 @@ class CLI
     end
   end
 
-  def load(path="event_attendees.csv")
+  def load_file(path="event_attendees.csv")
     csv = Loader.new(path)
     @repository = Repository.new(csv.attendees)
   end
@@ -106,23 +107,18 @@ class CLI
     commands.first == "q" || commands.first == "quit"
   end
 
-  def help?
-    commands.first == 'h' || commands.first == "help"
-  end
-
   def multiple_commands?
     commands.length > 1
   end
 
   def get_commands
     out.printf printer.command_prompt
-    @commands = gets.strip.downcase
+    @commands = input.gets.strip.downcase
   end
 
   def welcome_message
     out.print printer.clear_screen
     out.puts printer.welcome_message
-    out.puts printer.start_commands
   end
 
   def invalid_command

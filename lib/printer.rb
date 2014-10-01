@@ -1,11 +1,8 @@
 class Printer
 
   def welcome_message
-    "Welcome to Event Reporter!"
-  end
-
-  def start_commands
-    "\n(h)elp to list available commands\n(q)uit to exit at any time\n"
+    "Welcome to Event Reporter!
+    \n'help' to list available commands\n'quit' to exit at any time\n"
   end
 
   def command_prompt
