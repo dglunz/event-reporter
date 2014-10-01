@@ -27,7 +27,7 @@ class CLI
 
     case commands.first
     when "load"
-      multiple_commands? ? load_file(argument) : load_file
+      multiple_commands? ? load_file(argument.last) : load_file
     when "queue"
       queue(argument)
     when "find"
