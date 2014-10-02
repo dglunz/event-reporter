@@ -34,6 +34,39 @@ class Processor
     end
   end
 
+  def queue
+    case attribute
+    when "print" then multiple_commands? ? print_by : repository.queue_print
+    when "count" then out.puts repository.queue_count
+    when "clear" then repository.queue_clear; out.puts printer.queue_cleared
+    when "save"
+      file_name = argument.last
+      Saver.new.save_file(repository.queue, file_name)
+    end
+  end
+
+  def help
+    case attribute
+    when "load"  then out.puts printer.help_load
+    when "find"  then out.puts printer.help_find
+    when "queue" then queue_help
+    else
+      invalid_command
+    end
+  end
+
+  def queue_help
+    case argument.last
+    when "count" then out.puts printer.help_queue_count
+    when "clear" then out.puts printer.help_queue_clear
+    when "print" then out.puts printer.help_queue_print
+    when "by"    then out.puts printer.help_queue_print_by
+    when "to"    then out.puts printer.help_queue_save_to
+    else
+      multiple_commands? ? invalid_command : (out.puts printer.help)
+    end
+  end
+
   def load_file(path="event_attendees.csv")
     if File.exist?("./data/#{path}")
       csv = Loader.new(path)
@@ -90,49 +123,6 @@ class Processor
     out.puts printer.queue_updated
   end
 
-  def queue
-    case attribute
-    when "print" then multiple_commands? ? print_by : repository.queue_print
-    when "count" then out.puts repository.queue_count
-    when "clear" then repository.queue_clear; out.puts printer.queue_cleared
-    when "save"
-      file_name = argument.last
-      Saver.new.save_file(repository.queue, file_name)
-    end
-  end
-
-  def print_by
-    sort_column = argument.last
-    if valid_attribute?(sort_column)
-       repository.sort_by(sort_column)
-    else
-       sort_column = "first_name"
-    end
-    out.puts repository.queue_print
-  end
-
-  def help
-    case attribute
-    when "load"  then out.puts printer.help_load
-    when "find"  then out.puts printer.help_find
-    when "queue" then queue_help
-    else
-      invalid_command
-    end
-  end
-
-  def queue_help
-    case argument.last
-    when "count" then out.puts printer.help_queue_count
-    when "clear" then out.puts printer.help_queue_clear
-    when "print" then out.puts printer.help_queue_print
-    when "by"    then out.puts printer.help_queue_print_by
-    when "to"    then out.puts printer.help_queue_save_to
-    else
-      multiple_commands? ? invalid_command : (out.puts printer.help)
-    end
-  end
-
   def multiple_commands?
     commands.length > 1
   end
@@ -144,6 +134,27 @@ class Processor
 
   def quit?
     commands.first == 'quit' || commands.first == 'q' || commands.first == 'exit'
+  end
+
+  def print_by
+    sort_column = argument.last
+    valid_attribute?(sort_column) ? repository.sort_by(sort_column) :  sort_column = "first_name"
+
+    results = Table.new(repository.queue)
+    out.puts results.create_table
+    out.puts printer.pagination(results)
+
+    @scroll = gets
+
+    while more_results?(results)
+      out.puts results.increase_table
+      out.puts printer.pagination(results)
+      @scroll = gets
+    end
+  end
+
+  def more_results?(results)
+    @scroll == "\n" && results.row_next != results.queue.count
   end
 
 end
