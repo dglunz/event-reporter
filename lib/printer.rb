@@ -58,6 +58,22 @@ class Printer
     "
   end
 
+  def file_loaded
+    "File loaded"
+  end
+
+  def queue_loaded
+    "Queue loaded"
+  end
+
+  def queue_updated
+    "Queue updated"
+  end
+
+   def queue_cleared
+    "Queue cleared"
+   end
+
   def invalid_command(command)
     "#{command} is an invalid command. See 'help' for a list of available commands."
   end

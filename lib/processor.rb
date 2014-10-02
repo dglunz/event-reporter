@@ -35,6 +35,7 @@ class Processor
   def load_file(path="event_attendees.csv")
     csv = Loader.new(path)
     @repository = Repository.new(csv.attendees)
+    out.puts printer.file_loaded
   end
 
   def find
@@ -44,6 +45,7 @@ class Processor
       repository.find_by(attribute, parse_criteria)
       repository.narrow_results_by(parse_attribute, parse_second_criteria)
     end
+    out.puts printer.queue_loaded
   end
 
   def predicate_index
@@ -70,17 +72,19 @@ class Processor
 
   def subtract
     repository.subtract_results_by(attribute, criteria)
+    out.puts printer.queue_updated
   end
 
   def add
     repository.add_results_by(attribute, criteria)
+    out.puts printer.queue_updated
   end
 
   def queue
     case attribute
     when "print" then multiple_commands? ? print_by : repository.queue_print
     when "count" then out.puts repository.queue_count
-    when "clear" then repository.queue_clear
+    when "clear" then repository.queue_clear; out.puts printer.queue_cleared
     when "save"
       file_name = argument.last
       Saver.new.save_file(repository.queue, file_name)
@@ -101,7 +105,6 @@ class Processor
     else
       invalid_command
     end
-
   end
 
   def queue_help
