@@ -170,5 +170,23 @@ class IntegrationTest < Minitest::Test
     #Observe that there should only be four records in the queue
     cli.process "queue count"
     assert_equal "4\n", output.string
-    end
+  end
+
+  def test_welcome_message
+    cli.welcome_message
+    assert_includes output.string, "Welcome"
+  end
+
+  def test_get_commands
+    cli = CLI.new(output, input)
+    input.string = 'load'
+    cli.get_commands
+    assert_equal 'load', cli.commands
+  end
+
+  def test_start_menu_can_quit
+    cli = CLI.new(output, input)
+    input.string = "load\nload\nquit"
+    cli.start_menu
+  end
 end

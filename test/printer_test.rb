@@ -78,4 +78,9 @@ class PrinterTest < Minitest::Test
     cli.process("help find")
     assert_includes output.string, "Loads the queue with all records matching the criteria"
   end
+
+  def test_help_invalid
+    cli.process("help queue cl lk d")
+    assert_includes output.string, "invalid"
+  end
 end
