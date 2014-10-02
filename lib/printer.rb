@@ -82,4 +82,8 @@ class Printer
     "\e[2J\e[f"
   end
 
+  def file_not_found
+    "File not found. Check your paths and try again."
+  end
+
 end

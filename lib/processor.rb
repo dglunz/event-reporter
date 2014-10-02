@@ -16,14 +16,16 @@ class Processor
 
   def process(input)
     @commands = input.strip.downcase.split(" ")
-    @argument = commands[1..-1] if multiple_commands?
-    @attribute = argument.first if multiple_commands?
-    @criteria = argument[1..-1].join(" ") if multiple_commands?
+    if multiple_commands?
+      @argument = commands[1..-1]
+      @attribute = argument.first
+      @criteria = argument[1..-1].join(" ")
+    end
 
     case commands.first
     when "load"     then multiple_commands? ? load_file(argument.last) : load_file
     when "queue"    then queue
-    when "find"     then find
+    when "find"     then valid_attribute?(attribute) ? find : invalid_command
     when "help"     then multiple_commands? ? help : (out.puts printer.help)
     when "subtract" then subtract
     when "add"      then add
@@ -33,9 +35,13 @@ class Processor
   end
 
   def load_file(path="event_attendees.csv")
-    csv = Loader.new(path)
-    @repository = Repository.new(csv.attendees)
-    out.puts printer.file_loaded
+    if File.exist?("./data/#{path}")
+      csv = Loader.new(path)
+      @repository = Repository.new(csv.attendees)
+      out.puts printer.file_loaded
+    else
+      out.puts printer.file_not_found
+    end
   end
 
   def find
@@ -46,6 +52,10 @@ class Processor
       repository.narrow_results_by(parse_attribute, parse_second_criteria)
     end
     out.puts printer.queue_loaded
+  end
+
+  def valid_attribute?(attribute)
+    Entry.instance_methods.include?(attribute.to_sym)
   end
 
   def predicate_index
@@ -93,7 +103,11 @@ class Processor
 
   def print_by
     sort_column = argument.last
-    repository.sort_by(sort_column)
+    if valid_attribute?(sort_column)
+       repository.sort_by(sort_column)
+    else
+       sort_column = "first_name"
+    end
     out.puts repository.queue_print
   end
 
