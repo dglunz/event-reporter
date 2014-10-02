@@ -2,9 +2,7 @@ class CLI
   attr_reader :printer,
               :out,
               :input,
-              :repository,
               :commands,
-              :argument,
               :processor
 
   def initialize(out=$stdout, input=$stdin)
