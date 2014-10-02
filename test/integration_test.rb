@@ -22,19 +22,19 @@ class IntegrationTest < Minitest::Test
 
     cli.process "queue count"
 
-    assert_equal "0\n", output.string
+    assert_includes output.string, "0\n"
 
     clear_output
 
     cli.process "find first_name john"
     cli.process "queue count"
-    assert_equal "63\n", output.string
+    assert_includes output.string, "63\n"
 
     clear_output
 
     cli.process "queue clear"
     cli.process "queue count"
-    assert_equal "0\n", output.string
+    assert_includes output.string, "0\n"
 
     cli.process "help"
     %w[load find queue help].each do |command_name|
@@ -57,7 +57,7 @@ class IntegrationTest < Minitest::Test
     cli.process "load"
     # queue count should return 0
     cli.process "queue count"
-    assert_equal "0\n", output.string
+    assert_includes output.string, "0\n"
     clear_output
     # find first_name John
     cli.process "find first_name john"
@@ -65,13 +65,13 @@ class IntegrationTest < Minitest::Test
     cli.process "find first_name mary"
     # queue print should print out the 16 attendees
     cli.process "queue count"
-    assert_equal "16\n", output.string
+    assert_includes output.string, "16\n"
     # queue print by last_name should print the same attendees sorted alphabetically by last name
     cli.process "queue print" #table is displayed in stringio buffer
     # queue count should return 16
     clear_output
     cli.process "queue count"
-    assert_equal "16\n", output.string
+    assert_includes output.string, "16\n"
   end
 
   def test_saving
@@ -81,7 +81,7 @@ class IntegrationTest < Minitest::Test
     cli.process "find city salt lake city"
     # queue print should display 13 attendees
     cli.process "queue count"
-    assert_equal "13\n", output.string
+    assert_includes output.string, "13\n"
     # queue save to city_sample.csv
     cli.process "queue save to city_sample.csv"
     # Open the CSV and inspect that it has correct headers and the data rows from step 3.
@@ -117,7 +117,7 @@ class IntegrationTest < Minitest::Test
     cli.process "find first_name john"
     # queue count should return 4
     cli.process "queue count"
-    assert_equal "4\n", output.string
+    assert_includes output.string, "4\n"
     File.delete('./data/state_sample.csv')
   end
 
@@ -128,7 +128,7 @@ class IntegrationTest < Minitest::Test
     cli.process "find last_name johnson"
     # queue count should return 0
     cli.process "queue count"
-    assert_equal "0\n", output.string
+    assert_includes output.string, "0\n"
     clear_output
     # queue print should not print any attendee data
     cli.process "queue print"
@@ -144,7 +144,7 @@ class IntegrationTest < Minitest::Test
     cli.process "queue save to empty.csv"
     # queue count should return 0
     cli.process "queue count"
-    assert_equal "0\n", output.string
+    assert_includes output.string, "0\n"
     File.delete('./data/empty.csv')
   end
 
@@ -159,7 +159,7 @@ class IntegrationTest < Minitest::Test
     cli.process "add zipcode 20010"
     #Observe that there are 8 records in the queue.
     cli.process "queue count"
-    assert_equal "8\n", output.string
+    assert_includes output.string, "8\n"
   end
 
   def test_improve_find
@@ -169,7 +169,7 @@ class IntegrationTest < Minitest::Test
     cli.process "find first_name sarah and state ca"
     #Observe that there should only be four records in the queue
     cli.process "queue count"
-    assert_equal "4\n", output.string
+    assert_includes output.string, "4\n"
   end
 
   def test_welcome_message
