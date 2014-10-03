@@ -86,4 +86,9 @@ class Printer
     "File not found. Check your paths and try again."
   end
 
+  def pagination(table)
+    "Displaying #{table.row} - #{table.row_next} of #{table.queue.count} results \
+    Press enter to display more results"
+  end
+
 end
